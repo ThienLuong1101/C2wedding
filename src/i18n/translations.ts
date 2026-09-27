@@ -72,6 +72,7 @@ type Dictionary = {
     failed: string;
     playAria: string;
     pauseAria: string;
+    credit: string;
   };
   language: {
     label: string;
@@ -148,6 +149,7 @@ export const translations: Record<Lang, Dictionary> = {
       failed: "Tap again",
       playAria: "Play music",
       pauseAria: "Pause music",
+      credit: 'Music: "Dreamy Flashback" by Kevin MacLeod (incompetech.com) · CC BY',
     },
     language: {
       label: "Language",
@@ -222,6 +224,7 @@ export const translations: Record<Lang, Dictionary> = {
       failed: "Chạm lại",
       playAria: "Bật nhạc",
       pauseAria: "Tắt nhạc",
+      credit: 'Nhạc: "Dreamy Flashback" — Kevin MacLeod (incompetech.com) · CC BY',
     },
     language: {
       label: "Ngôn ngữ",
@@ -296,6 +299,7 @@ export const translations: Record<Lang, Dictionary> = {
       failed: "请再点一次",
       playAria: "播放音乐",
       pauseAria: "暂停音乐",
+      credit: '音乐："Dreamy Flashback" — Kevin MacLeod（incompetech.com）· CC BY',
     },
     language: {
       label: "语言",

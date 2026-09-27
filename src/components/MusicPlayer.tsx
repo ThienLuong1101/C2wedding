@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const MUSIC_SRC = "/music/wedding-music.mp3";
+const MUSIC_SRC = "/music/wedding-music.mp3?v=dreamy-flashback";
 const TARGET_VOLUME = 0.65;
 
 export default function MusicPlayer() {
