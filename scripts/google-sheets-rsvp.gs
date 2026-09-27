@@ -1,23 +1,33 @@
 /**
  * Wedding RSVP → this spreadsheet.
  *
- * Setup:
- * 1. Create a Google Sheet (or open the one you want).
- * 2. Extensions → Apps Script. Replace the default file with this script. Save.
- * 3. Project Settings → Script properties → Add:
- *      Property: RSVP_SECRET
- *      Value:    a long random string (same value as GOOGLE_SHEETS_SECRET in .env)
- * 4. Deploy → New deployment → Select type: Web app
- *      Execute as: Me
- *      Who has access: Anyone
- * 5. Copy the Web app URL into GOOGLE_SHEETS_WEBHOOK_URL.
- *    Each new RSVP is appended on the "RSVPs" tab.
+ * IMPORTANT — this is what fixes the Railway 401 error:
+ *   Deploy → Manage deployments → pencil (Edit)
+ *   Execute as: Me
+ *   Who has access: Anyone          ← must NOT be "Anyone with a Google account"
+ *   Deploy (creates a New version)
+ *   Copy the URL that ends in /exec (not /dev)
  *
- * Skip this script if you use a Google Cloud service account instead
- * (GOOGLE_SHEET_ID + GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY).
+ * Setup:
+ * 1. Create/open your Google Sheet.
+ * 2. Extensions → Apps Script. Paste this file. Save.
+ * 3. Project Settings → Script properties → Add:
+ *      RSVP_SECRET = same value as GOOGLE_SHEETS_SECRET on Railway
+ * 4. Deploy as Web app (settings above).
+ * 5. Test: open the /exec URL in a private/incognito window.
+ *    You should see: {"ok":true,"service":"rsvp"}
+ *    If Google asks you to sign in, access is still wrong — redeploy.
  */
+function doGet() {
+  return json_({ ok: true, service: "rsvp" });
+}
+
 function doPost(e) {
   try {
+    if (!e || !e.postData || !e.postData.contents) {
+      return json_({ ok: false, error: "empty body" });
+    }
+
     var body = JSON.parse(e.postData.contents);
     var expected = PropertiesService.getScriptProperties().getProperty("RSVP_SECRET");
     if (!expected || body.secret !== expected) {

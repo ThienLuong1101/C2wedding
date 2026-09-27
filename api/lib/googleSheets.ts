@@ -191,8 +191,10 @@ async function appendViaApi(row: RsvpSheetRow) {
 }
 
 function assertWebhookBody(text: string) {
-  if (text.includes("accounts.google.com") || /<html/i.test(text)) {
-    throw new Error("Google Sheets webhook is not public. Redeploy the Apps Script with access set to Anyone.");
+  if (text.includes("accounts.google.com") || /<!DOCTYPE html|/i.test(text) || /<html/i.test(text)) {
+    throw new Error(
+      "Google Sheets webhook is blocked (sign-in page). Redeploy Apps Script as Web app with Execute as: Me and Who has access: Anyone.",
+    );
   }
   if (!text) return;
   try {
@@ -204,38 +206,47 @@ function assertWebhookBody(text: string) {
   }
 }
 
-async function appendViaWebhook(row: RsvpSheetRow) {
-  const res = await fetch(env.googleSheetsWebhookUrl, {
+async function postWebhook(url: string, body: string) {
+  return fetch(url, {
     method: "POST",
     redirect: "manual",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      secret: env.googleSheetsSecret,
-      submittedAt: formatSubmittedAt(),
-      name: row.name,
-      contact: row.contact,
-      attending: row.attending,
-      guests: row.attending === "yes" ? row.guests : 0,
-      message: row.message,
-    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body,
+  });
+}
+
+async function appendViaWebhook(row: RsvpSheetRow) {
+  const payload = JSON.stringify({
+    secret: env.googleSheetsSecret,
+    submittedAt: formatSubmittedAt(),
+    name: row.name,
+    contact: row.contact,
+    attending: row.attending,
+    guests: row.attending === "yes" ? row.guests : 0,
+    message: row.message,
   });
 
+  // Apps Script web apps often 302 to googleusercontent.com — must POST again, not GET.
+  let res = await postWebhook(env.googleSheetsWebhookUrl, payload);
   if (res.status >= 300 && res.status < 400) {
     const location = res.headers.get("location") ?? "";
     if (!location || location.includes("accounts.google.com")) {
-      throw new Error("Google Sheets webhook is not public. Redeploy the Apps Script with access set to Anyone.");
+      throw new Error(
+        "Google Sheets webhook is not public. Redeploy Apps Script with Who has access: Anyone (not 'Anyone with a Google account').",
+      );
     }
-    const followed = await fetch(location);
-    const text = await followed.text();
-    if (!followed.ok) {
-      throw new Error(`Google Sheets webhook failed (${followed.status}): ${text.slice(0, 300)}`);
-    }
-    assertWebhookBody(text);
-    return;
+    res = await postWebhook(location, payload);
   }
 
   const text = await res.text();
   if (!res.ok) {
+    if (res.status === 401 || res.status === 403) {
+      throw new Error(
+        "Google Sheets webhook returned 401/403. Open Apps Script → Deploy → Manage deployments → Edit → Who has access: Anyone → New version. Use the /exec URL (not /dev).",
+      );
+    }
     throw new Error(`Google Sheets webhook failed (${res.status}): ${text.slice(0, 300)}`);
   }
   assertWebhookBody(text);
