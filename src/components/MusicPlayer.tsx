@@ -1,13 +1,14 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const MUSIC_SRC = "/music/wedding-music.mp3?v=gymnopedie-1";
+const MUSIC_SRC = "/music/wedding-music.mp3?v=0927";
 const TARGET_VOLUME = 0.65;
 
 export default function MusicPlayer() {
   const { t } = useLanguage();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const fadeRef = useRef<number | null>(null);
+  const startedRef = useRef(false);
   const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -36,6 +37,60 @@ export default function MusicPlayer() {
     fadeRef.current = requestAnimationFrame(step);
   };
 
+  const playNow = async () => {
+    const audio = audioRef.current;
+    if (!audio) return false;
+    try {
+      stopFade();
+      audio.volume = TARGET_VOLUME;
+      await audio.play();
+      startedRef.current = true;
+      setPlaying(true);
+      setFailed(false);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    const unlockEvents = ["pointerdown", "touchstart", "keydown", "scroll"] as const;
+
+    const onUnlock = () => {
+      if (cancelled || startedRef.current) return;
+      void playNow().then((ok) => {
+        if (ok) removeUnlockListeners();
+      });
+    };
+
+    const removeUnlockListeners = () => {
+      for (const event of unlockEvents) {
+        window.removeEventListener(event, onUnlock);
+      }
+    };
+
+    const addUnlockListeners = () => {
+      for (const event of unlockEvents) {
+        window.addEventListener(event, onUnlock, { passive: true });
+      }
+    };
+
+    void playNow().then((ok) => {
+      if (cancelled) return;
+      if (!ok) addUnlockListeners();
+    });
+
+    return () => {
+      cancelled = true;
+      removeUnlockListeners();
+      stopFade();
+      audioRef.current?.pause();
+    };
+    // Mount-only: start music by default when the page opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const toggle = async () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -47,13 +102,8 @@ export default function MusicPlayer() {
       return;
     }
 
-    try {
-      stopFade();
-      audio.volume = TARGET_VOLUME;
-      await audio.play();
-      setPlaying(true);
-    } catch (error) {
-      console.error("Music playback failed.", error);
+    const ok = await playNow();
+    if (!ok) {
       setPlaying(false);
       setFailed(true);
     }
@@ -67,6 +117,7 @@ export default function MusicPlayer() {
         loop
         preload="auto"
         playsInline
+        autoPlay
         className="hidden"
       />
       <button

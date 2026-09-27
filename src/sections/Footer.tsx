@@ -28,16 +28,18 @@ export default function Footer() {
           24 . 12 . 2026 · KUALA LUMPUR
         </p>
         <p className="label-caps mt-6 text-[0.55rem] text-[var(--rose-deep)]">#AndersAndUyen</p>
-        <p className="mx-auto mt-5 max-w-sm font-serif-display text-xs leading-relaxed text-[var(--ink-soft)]/80">
-          <a
-            href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100063"
-            target="_blank"
-            rel="noreferrer"
-            className="underline decoration-[var(--rose)]/40 underline-offset-2 transition-colors hover:text-[var(--rose-deep)]"
-          >
-            {t.music.credit}
-          </a>
-        </p>
+        {t.music.credit ? (
+          <p className="mx-auto mt-5 max-w-sm font-serif-display text-xs leading-relaxed text-[var(--ink-soft)]/80">
+            <a
+              href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100063"
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-[var(--rose)]/40 underline-offset-2 transition-colors hover:text-[var(--rose-deep)]"
+            >
+              {t.music.credit}
+            </a>
+          </p>
+        ) : null}
       </Reveal>
     </footer>
   );
