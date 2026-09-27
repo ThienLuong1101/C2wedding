@@ -1,22 +1,24 @@
 /**
  * Wedding RSVP → this spreadsheet.
  *
- * IMPORTANT — this is what fixes the Railway 401 error:
- *   Deploy → Manage deployments → pencil (Edit)
+ * A 401 HTML sign-in page means this deployment is not anonymous.
+ * Editing an old deployment does not make the old URL public.
+ *
+ *   Deploy → New deployment → gear → Web app
  *   Execute as: Me
- *   Who has access: Anyone          ← must NOT be "Anyone with a Google account"
- *   Deploy (creates a New version)
- *   Copy the URL that ends in /exec (not /dev)
+ *   Who has access: Anyone     ← not "Anyone with a Google account"
+ *   Deploy, authorize, then copy the NEW url ending in /exec
+ *   Put that url in Railway as GOOGLE_SHEETS_WEBHOOK_URL and redeploy
  *
  * Setup:
  * 1. Create/open your Google Sheet.
  * 2. Extensions → Apps Script. Paste this file. Save.
  * 3. Project Settings → Script properties → Add:
  *      RSVP_SECRET = same value as GOOGLE_SHEETS_SECRET on Railway
- * 4. Deploy as Web app (settings above).
+ * 4. Deploy as Web app (settings above). Do not add anything after /exec.
  * 5. Test: open the /exec URL in a private/incognito window.
  *    You should see: {"ok":true,"service":"rsvp"}
- *    If Google asks you to sign in, access is still wrong — redeploy.
+ *    If Google asks you to sign in, the access setting is still wrong.
  */
 function doGet() {
   return json_({ ok: true, service: "rsvp" });

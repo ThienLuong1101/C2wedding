@@ -190,12 +190,45 @@ async function appendViaApi(row: RsvpSheetRow) {
   );
 }
 
-function assertWebhookBody(text: string) {
-  if (text.includes("accounts.google.com") || /<!DOCTYPE html|/i.test(text) || /<html/i.test(text)) {
+const SIGN_IN_PAGE = /accounts\.google\.com|<!DOCTYPE html|<html/i;
+
+function assertPublicWebhookUrl(url: string) {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error("GOOGLE_SHEETS_WEBHOOK_URL is not a valid URL.");
+  }
+  const exec = parsed.hostname === "script.google.com" && /\/macros\/s\/[^/]+\/exec$/.test(parsed.pathname);
+  if (!exec) {
     throw new Error(
-      "Google Sheets webhook is blocked (sign-in page). Redeploy Apps Script as Web app with Execute as: Me and Who has access: Anyone.",
+      "GOOGLE_SHEETS_WEBHOOK_URL must be the Apps Script web app URL ending in /exec. /dev URLs and any extra path after /exec require a Google sign-in.",
     );
   }
+}
+
+function isSignInPage(text: string) {
+  return SIGN_IN_PAGE.test(text);
+}
+
+function signInError() {
+  return new Error(
+    "Google Sheets webhook is showing a sign-in page. In Apps Script choose Deploy → New deployment → Web app, Execute as: Me, Who has access: Anyone. Copy the new /exec URL into GOOGLE_SHEETS_WEBHOOK_URL. Editing an old deployment keeps the old URL private.",
+  );
+}
+
+function cookieHeader(res: Response) {
+  const setCookies = typeof res.headers.getSetCookie === "function" ? res.headers.getSetCookie() : [];
+  const fallback = res.headers.get("set-cookie");
+  const all = setCookies.length > 0 ? setCookies : fallback ? [fallback] : [];
+  return all
+    .map((cookie) => cookie.split(";")[0]?.trim())
+    .filter(Boolean)
+    .join("; ");
+}
+
+function assertWebhookBody(text: string) {
+  if (isSignInPage(text)) throw signInError();
   if (!text) return;
   try {
     const data = JSON.parse(text) as { ok?: boolean; error?: string };
@@ -206,18 +239,8 @@ function assertWebhookBody(text: string) {
   }
 }
 
-async function postWebhook(url: string, body: string) {
-  return fetch(url, {
-    method: "POST",
-    redirect: "manual",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body,
-  });
-}
-
 async function appendViaWebhook(row: RsvpSheetRow) {
+  assertPublicWebhookUrl(env.googleSheetsWebhookUrl);
   const payload = JSON.stringify({
     secret: env.googleSheetsSecret,
     submittedAt: formatSubmittedAt(),
@@ -228,25 +251,32 @@ async function appendViaWebhook(row: RsvpSheetRow) {
     message: row.message,
   });
 
-  // Apps Script web apps often 302 to googleusercontent.com — must POST again, not GET.
-  let res = await postWebhook(env.googleSheetsWebhookUrl, payload);
-  if (res.status >= 300 && res.status < 400) {
+  // Apps Script runs doPost on the first request, then 302s to script.googleusercontent.com.
+  // That echo URL must be fetched with GET. A second POST returns 405, and fetch drops the
+  // Set-Cookie from the 302, which comes back as a 401 sign-in page.
+  let res = await fetch(env.googleSheetsWebhookUrl, {
+    method: "POST",
+    redirect: "manual",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: payload,
+  });
+
+  let cookie = cookieHeader(res);
+  for (let hop = 0; hop < 4 && res.status >= 300 && res.status < 400; hop++) {
     const location = res.headers.get("location") ?? "";
-    if (!location || location.includes("accounts.google.com")) {
-      throw new Error(
-        "Google Sheets webhook is not public. Redeploy Apps Script with Who has access: Anyone (not 'Anyone with a Google account').",
-      );
-    }
-    res = await postWebhook(location, payload);
+    if (!location || /accounts\.google\.com/i.test(location)) throw signInError();
+    const nextCookie = cookieHeader(res);
+    if (nextCookie) cookie = cookie ? `${cookie}; ${nextCookie}` : nextCookie;
+    res = await fetch(location, {
+      method: "GET",
+      redirect: "manual",
+      headers: cookie ? { Cookie: cookie } : {},
+    });
   }
 
   const text = await res.text();
+  if (res.status === 401 || res.status === 403 || isSignInPage(text)) throw signInError();
   if (!res.ok) {
-    if (res.status === 401 || res.status === 403) {
-      throw new Error(
-        "Google Sheets webhook returned 401/403. Open Apps Script → Deploy → Manage deployments → Edit → Who has access: Anyone → New version. Use the /exec URL (not /dev).",
-      );
-    }
     throw new Error(`Google Sheets webhook failed (${res.status}): ${text.slice(0, 300)}`);
   }
   assertWebhookBody(text);
