@@ -30,54 +30,56 @@ export default function Details() {
   ];
 
   return (
-    <section className="relative overflow-hidden px-6 py-24 sm:py-32">
+    <section className="section-pad relative overflow-hidden">
       <img
         src={floralCorner}
         alt=""
-        className="animate-down-up pointer-events-none absolute -right-24 -top-24 w-80 rotate-180 opacity-60 sm:w-96"
+        className="animate-down-up pointer-events-none absolute -right-24 -top-16 w-72 rotate-180 opacity-50 sm:w-80"
       />
 
-      <div className="relative mx-auto max-w-2xl text-center">
+      <div className="relative mx-auto max-w-5xl text-center">
         <Reveal>
+          <div className="ornament mb-4">
+            <span className="ornament-diamond" />
+          </div>
           <p className="label-caps text-[0.62rem] text-[var(--rose-deep)] sm:text-xs">{t.details.eyebrow}</p>
-          <h2 className="font-script mt-4 text-5xl text-[var(--ink)] sm:text-6xl">{t.details.title}</h2>
+          <h2 className="font-script mt-3 text-5xl text-[var(--ink)] sm:text-6xl">{t.details.title}</h2>
         </Reveal>
 
-        <div className="mt-12 grid items-end gap-5 sm:grid-cols-[0.9fr_1.1fr] sm:gap-6">
+        <div className="mt-10 grid items-end gap-4 sm:grid-cols-[0.85fr_1.15fr] sm:gap-6">
           <Photo
             src={photos.handKiss}
             alt={t.photos.handKiss}
             delay={1}
-            className="mx-auto w-full max-w-[260px] sm:max-w-none sm:translate-y-4"
-            imgClassName="aspect-[2/3]"
+            className="mx-auto w-full max-w-[280px] sm:max-w-none"
+            imgClassName="aspect-[2/3] photo-tilt-left"
           />
           <Photo
             src={photos.lanterns}
             alt={t.photos.lanterns}
             delay={2}
-            className="mx-auto w-full max-w-md sm:max-w-none"
-            imgClassName="aspect-[4/3]"
+            className="mx-auto w-full max-w-lg sm:max-w-none"
+            imgClassName="aspect-[5/4]"
           />
         </div>
 
-        <div className="mt-16">
+        <div className="mx-auto mt-12 grid max-w-4xl gap-2 sm:grid-cols-3 sm:gap-6">
           {rows.map((row, i) => (
             <Reveal key={row.label} delay={(i % 4) as 0 | 1 | 2 | 3}>
-              <div>
-                {i > 0 && <div className="hairline mx-auto mb-14 mt-14 w-40" />}
-                <p className="font-serif-display text-base italic text-[var(--ink-soft)] sm:text-lg">
-                  {row.label}
-                </p>
-                <p className="font-serif-display mt-4 text-2xl font-medium leading-snug text-[var(--ink)] sm:text-3xl">
+              <div className="detail-block">
+                <p className="label-caps text-[0.55rem] text-[var(--rose-deep)] sm:text-[0.58rem]">{row.label}</p>
+                <p className="font-serif-display mt-3 text-xl font-medium leading-snug text-[var(--ink)] sm:text-2xl">
                   {row.value}
                 </p>
-                <p className="font-serif-display mt-2 text-base text-[var(--ink-soft)] sm:text-lg">{row.sub}</p>
+                <p className="font-serif-display mt-2 text-sm leading-relaxed text-[var(--ink-soft)] sm:text-base">
+                  {row.sub}
+                </p>
                 {row.link && (
                   <a
                     href={row.link.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="label-caps mt-5 inline-block border-b border-[var(--rose)] pb-1 text-[0.62rem] text-[var(--rose-deep)] transition-colors hover:text-[var(--ink)]"
+                    className="label-caps mt-4 inline-block border-b border-[var(--rose)] pb-1 text-[0.58rem] text-[var(--rose-deep)] transition-colors hover:text-[var(--ink)]"
                   >
                     {row.link.label}
                   </a>

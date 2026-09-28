@@ -8,49 +8,53 @@ export default function Invitation() {
   const { t } = useLanguage();
 
   return (
-    <section className="relative mx-auto max-w-2xl px-6 py-24 text-center sm:py-32">
+    <section className="section-pad relative mx-auto max-w-5xl text-center">
       <Reveal>
-        <img src={sprig} alt="" className="animate-up-down mx-auto mb-10 w-16 opacity-90 sm:w-20" />
+        <img src={sprig} alt="" className="animate-up-down mx-auto mb-6 w-14 opacity-90 sm:w-16" />
       </Reveal>
 
-      <Reveal delay={1}>
-        <p className="label-caps text-[0.62rem] text-[var(--rose-deep)] sm:text-xs">{t.invitation.mrMrs}</p>
-        <p className="font-serif-display mt-3 text-xl font-medium tracking-[0.12em] text-[var(--ink)] sm:text-2xl">
-          ALEX NG &amp; JASLYN TANG
-        </p>
-      </Reveal>
+      <div className="grid items-center gap-8 md:grid-cols-[0.95fr_1.05fr] md:gap-10 md:text-left">
+        <Photo
+          src={photos.pavilion}
+          alt={t.photos.pavilion}
+          delay={1}
+          className="mx-auto w-full max-w-[300px] md:max-w-none"
+          imgClassName="aspect-[2/3] photo-tilt-left"
+        />
 
-      <Reveal delay={2}>
-        <p className="font-serif-display mx-auto mt-10 max-w-md text-lg italic leading-relaxed text-[var(--ink-soft)] sm:text-xl">
-          {t.invitation.inviteSon}
-        </p>
-      </Reveal>
+        <div>
+          <Reveal delay={1}>
+            <p className="label-caps text-[0.62rem] text-[var(--rose-deep)] sm:text-xs">{t.invitation.mrMrs}</p>
+            <p className="font-serif-display mt-2 text-xl font-medium tracking-[0.12em] text-[var(--ink)] sm:text-2xl">
+              ALEX NG &amp; JASLYN TANG
+            </p>
+          </Reveal>
 
-      <Reveal delay={3}>
-        <div className="mx-auto mt-12 flex items-center justify-center gap-5">
-          <span className="hairline w-16 sm:w-28" />
-          <span className="font-script text-4xl text-[var(--rose)] sm:text-5xl">A &amp; U</span>
-          <span className="hairline w-16 sm:w-28" />
+          <Reveal delay={2}>
+            <p className="font-serif-display mx-auto mt-6 max-w-md text-lg italic leading-relaxed text-[var(--ink-soft)] md:mx-0 sm:text-xl">
+              {t.invitation.inviteSon}
+            </p>
+          </Reveal>
+
+          <Reveal delay={3}>
+            <div className="mx-auto mt-8 flex items-center justify-center gap-4 md:justify-start">
+              <span className="hairline w-12 sm:w-20" />
+              <span className="font-script text-4xl text-[var(--rose)] sm:text-5xl">A &amp; U</span>
+              <span className="hairline w-12 sm:w-20" />
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <p className="font-serif-display mx-auto mt-8 max-w-md text-lg italic leading-relaxed text-[var(--ink-soft)] md:mx-0 sm:text-xl">
+              {t.invitation.daughterOf}
+            </p>
+            <p className="label-caps mt-3 text-[0.62rem] text-[var(--rose-deep)] sm:text-xs">{t.invitation.mrMrs}</p>
+            <p className="font-serif-display mt-2 text-xl font-medium tracking-[0.12em] text-[var(--ink)] sm:text-2xl">
+              NGUYỄN THANH LƯƠNG &amp; TRẦN THỊ ÁNH
+            </p>
+          </Reveal>
         </div>
-      </Reveal>
-
-      <Photo
-        src={photos.pavilion}
-        alt={t.photos.pavilion}
-        delay={1}
-        className="mx-auto mt-14 w-full max-w-[280px] sm:max-w-[320px]"
-        imgClassName="aspect-[2/3]"
-      />
-
-      <Reveal>
-        <p className="font-serif-display mx-auto mt-14 max-w-md text-lg italic leading-relaxed text-[var(--ink-soft)] sm:text-xl">
-          {t.invitation.daughterOf}
-        </p>
-        <p className="label-caps mt-3 text-[0.62rem] text-[var(--rose-deep)] sm:text-xs">{t.invitation.mrMrs}</p>
-        <p className="font-serif-display mt-3 text-xl font-medium tracking-[0.12em] text-[var(--ink)] sm:text-2xl">
-          NGUYỄN THANH LƯƠNG &amp; TRẦN THỊ ÁNH
-        </p>
-      </Reveal>
+      </div>
     </section>
   );
 }

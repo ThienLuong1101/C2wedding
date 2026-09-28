@@ -63,6 +63,8 @@ export default function Hero() {
 
   return (
     <header className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6">
+      <div className="hero-glow pointer-events-none absolute inset-0" />
+
       <div ref={layerBack} className="pointer-events-none absolute inset-0 will-change-transform">
         <img
           src={floralCorner}
@@ -99,7 +101,11 @@ export default function Hero() {
         ))}
       </div>
 
-      <div className="relative z-10 flex flex-col items-center text-center">
+      <div className="relative z-10 flex max-w-3xl flex-col items-center text-center">
+        <div className="hero-rise ornament mb-6" style={{ animationDelay: "0.1s" }}>
+          <span className="ornament-diamond" />
+        </div>
+
         <p
           className="hero-rise label-caps text-[0.68rem] text-[var(--rose-deep)] sm:text-xs"
           style={{ animationDelay: "0.2s" }}
@@ -107,37 +113,37 @@ export default function Hero() {
           {t.hero.eyebrow}
         </p>
 
-        <h1 className="mt-8 flex flex-col items-center leading-none">
+        <h1 className="mt-6 flex flex-col items-center leading-none sm:mt-7">
           <span
-            className="hero-rise font-script text-[19vw] text-[var(--ink)] sm:text-8xl md:text-9xl"
+            className="hero-rise font-script text-[18vw] text-[var(--ink)] sm:text-8xl md:text-9xl"
             style={{ animationDelay: "0.45s" }}
           >
             Anders Ng
           </span>
           <span
-            className="hero-rise font-script my-1 text-[9vw] text-[var(--rose)] sm:my-2 sm:text-5xl md:text-6xl"
+            className="hero-rise font-script my-0.5 text-[8vw] text-[var(--rose)] sm:my-1 sm:text-5xl md:text-6xl"
             style={{ animationDelay: "0.7s" }}
           >
             &amp;
           </span>
           <span
-            className="hero-rise font-script text-[19vw] text-[var(--ink)] sm:text-8xl md:text-9xl"
+            className="hero-rise font-script text-[18vw] text-[var(--ink)] sm:text-8xl md:text-9xl"
             style={{ animationDelay: "0.95s" }}
           >
             Uyen Nguyen
           </span>
         </h1>
 
-        <div className="hero-rise mt-10 flex items-center gap-5" style={{ animationDelay: "1.25s" }}>
-          <span className="hairline w-14 sm:w-24" />
+        <div className="hero-rise mt-8 flex items-center gap-4 sm:mt-9 sm:gap-5" style={{ animationDelay: "1.25s" }}>
+          <span className="hairline w-12 sm:w-20" />
           <p className="font-serif-display text-lg tracking-[0.28em] text-[var(--ink)] sm:text-2xl">
             24 . 12 . 2026
           </p>
-          <span className="hairline w-14 sm:w-24" />
+          <span className="hairline w-12 sm:w-20" />
         </div>
 
         <p
-          className="hero-rise label-caps mt-6 text-[0.62rem] text-[var(--ink-soft)] sm:text-[0.7rem]"
+          className="hero-rise label-caps mt-5 text-[0.62rem] text-[var(--ink-soft)] sm:text-[0.7rem]"
           style={{ animationDelay: "1.45s" }}
         >
           Renaissance Kuala Lumpur Hotel
@@ -145,11 +151,11 @@ export default function Hero() {
       </div>
 
       <div
-        className="hero-rise absolute bottom-8 z-10 flex flex-col items-center gap-2"
+        className="hero-rise absolute bottom-7 z-10 flex flex-col items-center gap-2"
         style={{ animationDelay: "1.8s" }}
       >
         <span className="label-caps text-[0.55rem] text-[var(--ink-soft)]">{t.hero.scroll}</span>
-        <span className="relative block h-9 w-px bg-[var(--rose)] opacity-40" />
+        <span className="relative block h-8 w-px bg-[var(--rose)] opacity-40" />
         <span className="scroll-cue-dot absolute bottom-0 block h-1.5 w-1.5 rounded-full bg-[var(--rose-deep)]" />
       </div>
     </header>
