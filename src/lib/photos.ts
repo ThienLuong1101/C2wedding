@@ -19,8 +19,10 @@ export type GalleryItem = {
   orient: GalleryOrient;
 };
 
-/** Extra moments from /public/gallery */
-export const gallery: GalleryItem[] = [
+/** Section leads — kept out of the gallery mosaic so they aren't repeated */
+const sectionLeads = new Set([photos.countdownLead, photos.rsvpLead]);
+
+const allMoments: GalleryItem[] = [
   { src: "/gallery/moment-01.jpg", orient: "portrait" },
   { src: "/gallery/moment-02.jpg", orient: "landscape" },
   { src: "/gallery/moment-03.jpg", orient: "portrait" },
@@ -35,3 +37,6 @@ export const gallery: GalleryItem[] = [
   { src: "/gallery/moment-12.jpg", orient: "landscape" },
   { src: "/gallery/moment-13.jpg", orient: "portrait" },
 ];
+
+/** Gallery mosaic — excludes photos already used in other sections */
+export const gallery: GalleryItem[] = allMoments.filter((item) => !sectionLeads.has(item.src));
