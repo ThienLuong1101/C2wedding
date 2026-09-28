@@ -7,6 +7,9 @@ export const photos = {
   sunflowers: "/couple-sunflowers.jpg",
   lanterns: "/couple-lanterns.jpg",
   courtyard: "/couple-courtyard.jpg",
+  /** Featured gallery picks reused in page sections */
+  countdownLead: "/gallery/moment-06.jpg",
+  rsvpLead: "/gallery/moment-01.jpg",
 } as const;
 
 export type GalleryOrient = "portrait" | "landscape";

@@ -50,8 +50,8 @@ export default function Rsvp() {
 
         <div className="mt-10 grid items-start gap-8 md:grid-cols-[0.8fr_1.2fr] md:gap-10 md:text-left">
           <Photo
-            src={photos.selfie}
-            alt={t.photos.selfie}
+            src={photos.rsvpLead}
+            alt={t.gallery.photoAlt}
             delay={1}
             className="mx-auto w-full max-w-[240px] md:max-w-none"
             imgClassName="aspect-[3/4] photo-tilt-left"

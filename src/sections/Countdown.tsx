@@ -31,8 +31,8 @@ export default function Countdown() {
 
       <div className="mt-10 grid items-center gap-6 md:grid-cols-[1.15fr_0.85fr] md:gap-8">
         <Photo
-          src={photos.flowerField}
-          alt={t.photos.flowerField}
+          src={photos.countdownLead}
+          alt={t.gallery.photoAlt}
           delay={1}
           className="w-full"
           imgClassName="aspect-[4/3] sm:aspect-[3/2]"
