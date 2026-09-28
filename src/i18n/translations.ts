@@ -45,6 +45,16 @@ type Dictionary = {
     dressSub: string;
     map: string;
   };
+  gallery: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    photoAlt: string;
+    open: string;
+    close: string;
+    prev: string;
+    next: string;
+  };
   rsvp: {
     eyebrow: string;
     title: string;
@@ -122,6 +132,16 @@ export const translations: Record<Lang, Dictionary> = {
       dressSub: "Soft tones are welcome — pastel, blush, sage",
       map: "View on map ↗",
     },
+    gallery: {
+      eyebrow: "Our Moments",
+      title: "Gallery",
+      subtitle: "A few frames from our story — soft light, warm days, and us.",
+      photoAlt: "Wedding photo",
+      open: "Open photo",
+      close: "Close",
+      prev: "Previous photo",
+      next: "Next photo",
+    },
     rsvp: {
       eyebrow: "Kindly RSVP by 24.10.2026",
       title: "Will You Join Us?",
@@ -197,6 +217,16 @@ export const translations: Record<Lang, Dictionary> = {
       dressSub: "Sắc pastel, hồng nhạt, xanh sage rất được chào đón",
       map: "Xem bản đồ ↗",
     },
+    gallery: {
+      eyebrow: "Khoảnh khắc của chúng tôi",
+      title: "Thư Viện Ảnh",
+      subtitle: "Vài khung hình trong chuyện của chúng tôi — ánh sáng dịu, ngày ấm, và chúng tôi.",
+      photoAlt: "Ảnh cưới",
+      open: "Mở ảnh",
+      close: "Đóng",
+      prev: "Ảnh trước",
+      next: "Ảnh tiếp",
+    },
     rsvp: {
       eyebrow: "Kính mong xác nhận tham dự trước 24.10.2026",
       title: "Bạn Sẽ Đến Chứ?",
@@ -271,6 +301,16 @@ export const translations: Record<Lang, Dictionary> = {
       dressValue: "正式着装，轻松愉悦",
       dressSub: "欢迎柔和色调 — 粉彩、腮红粉、鼠尾草绿",
       map: "查看地图 ↗",
+    },
+    gallery: {
+      eyebrow: "我们的瞬间",
+      title: "相册",
+      subtitle: "我们故事里的几帧画面 — 柔光、暖日，还有我们。",
+      photoAlt: "婚礼照片",
+      open: "打开照片",
+      close: "关闭",
+      prev: "上一张",
+      next: "下一张",
     },
     rsvp: {
       eyebrow: "敬请于 2026.10.24 前确认出席",

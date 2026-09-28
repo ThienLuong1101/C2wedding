@@ -3,6 +3,7 @@ import Hero from "@/sections/Hero";
 import Invitation from "@/sections/Invitation";
 import Countdown from "@/sections/Countdown";
 import Details from "@/sections/Details";
+import Gallery from "@/sections/Gallery";
 import Rsvp from "@/sections/Rsvp";
 import Footer from "@/sections/Footer";
 import MusicPlayer from "@/components/MusicPlayer";
@@ -10,12 +11,13 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import "../App.css";
 
 const SECTION_COLORS = [
-  "#fbf8f2",
-  "#f6f4ed",
-  "#f7e2e7",
-  "#dfe8e6",
-  "#f6eadf",
-  "#dff3ea",
+  "#fbf8f2", // hero
+  "#f6f4ed", // invitation
+  "#f7e2e7", // countdown
+  "#dfe8e6", // details
+  "#f3ebe3", // gallery
+  "#f6eadf", // rsvp
+  "#dff3ea", // footer
 ];
 
 export default function Home() {
@@ -63,6 +65,7 @@ export default function Home() {
     <Invitation key="invitation" />,
     <Countdown key="countdown" />,
     <Details key="details" />,
+    <Gallery key="gallery" />,
     <Rsvp key="rsvp" />,
     <Footer key="footer" />,
   ];
