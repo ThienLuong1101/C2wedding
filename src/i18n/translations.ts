@@ -54,6 +54,7 @@ type Dictionary = {
     close: string;
     prev: string;
     next: string;
+    swipe: string;
   };
   rsvp: {
     eyebrow: string;
@@ -141,6 +142,7 @@ export const translations: Record<Lang, Dictionary> = {
       close: "Close",
       prev: "Previous photo",
       next: "Next photo",
+      swipe: "Swipe",
     },
     rsvp: {
       eyebrow: "Kindly RSVP by 24.10.2026",
@@ -226,6 +228,7 @@ export const translations: Record<Lang, Dictionary> = {
       close: "Đóng",
       prev: "Ảnh trước",
       next: "Ảnh tiếp",
+      swipe: "Vuốt",
     },
     rsvp: {
       eyebrow: "Kính mong xác nhận tham dự trước 24.10.2026",
@@ -311,6 +314,7 @@ export const translations: Record<Lang, Dictionary> = {
       close: "关闭",
       prev: "上一张",
       next: "下一张",
+      swipe: "滑动",
     },
     rsvp: {
       eyebrow: "敬请于 2026.10.24 前确认出席",

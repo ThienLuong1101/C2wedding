@@ -305,37 +305,100 @@
   }
 }
 
-.card-reel {
-  position: relative;
-}
-
-.card-reel-sticky {
-  position: sticky;
-  top: 4vh;
-  z-index: 1;
-  display: flex;
-  min-height: 92vh;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 .pile {
   position: relative;
   width: min(68vw, 320px);
   aspect-ratio: 2 / 3;
   margin-inline: auto;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+
+.pile.is-dragging {
+  cursor: grabbing;
 }
 
 .pile-card {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+  touch-action: pan-y;
+}
+
+.pile-card-top {
+  transform-origin: center 82%;
+}
+
+.pile-card-top.is-hinting {
+  animation: pile-nudge 2.6s ease-in-out infinite;
+}
+
+@keyframes pile-nudge {
+  0%,
+  18%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  38% {
+    transform: translate3d(-36px, 0, 0) rotate(-7deg);
+  }
+  62% {
+    transform: translate3d(36px, 0, 0) rotate(7deg);
+  }
+}
+
+.swipe-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-top: 1.15rem;
+  color: var(--rose-deep);
+  font-size: 0.95rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.swipe-hint-arrow {
+  font-size: 1.65rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.swipe-hint-arrow-left {
+  animation: hint-left 1.4s ease-in-out infinite;
+}
+
+.swipe-hint-arrow-right {
+  animation: hint-right 1.4s ease-in-out infinite;
+}
+
+@keyframes hint-left {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-8px);
+  }
+}
+
+@keyframes hint-right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
 }
 
 .pile-card img {
   display: block;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
 .gallery-trigger {
@@ -475,7 +538,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .petal, .animate-up-down, .animate-down-up, .scroll-cue-dot {
+  .petal, .animate-up-down, .animate-down-up, .scroll-cue-dot,
+  .pile-card-top.is-hinting, .swipe-hint-arrow-left, .swipe-hint-arrow-right {
     animation: none;
   }
   .reveal { transition: none; opacity: 1; transform: none; }

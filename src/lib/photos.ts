@@ -40,24 +40,11 @@ const allMoments: GalleryItem[] = [
 /** Gallery mosaic — excludes photos already used in other sections */
 export const gallery: GalleryItem[] = allMoments.filter((item) => !sectionLeads.has(item.src));
 
-/** Full photo library. The last gallery frame scrubs through this on scroll. */
-const coupleReel: GalleryItem[] = [
-  { src: photos.pavilion, orient: "portrait" },
-  { src: photos.selfie, orient: "portrait" },
-  { src: photos.flowerField, orient: "landscape" },
-  { src: photos.handKiss, orient: "portrait" },
-  { src: photos.sunflowers, orient: "landscape" },
-  { src: photos.lanterns, orient: "portrait" },
+/** Swipe pile — courtyard first, then the gallery mosaic only. */
+export const photoReel: GalleryItem[] = [
   { src: photos.courtyard, orient: "landscape" },
+  ...gallery,
 ];
-
-const library = [...allMoments, ...coupleReel];
-const reelStart = Math.max(
-  0,
-  library.findIndex((item) => item.src === photos.courtyard),
-);
-
-export const photoReel: GalleryItem[] = [...library.slice(reelStart), ...library.slice(0, reelStart)];
 
 /** Page colors that follow the scrolling last photo */
 export const reelBackdrops = [
