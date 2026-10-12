@@ -261,6 +261,10 @@
 }
 
 /* ---------- Gallery mosaic ---------- */
+.gallery-frame {
+  container-type: inline-size;
+}
+
 .gallery-mosaic {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -270,36 +274,68 @@
 @media (min-width: 768px) {
   .gallery-mosaic {
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    grid-auto-rows: 11vw;
+    grid-template-rows:
+      calc((100cqi - 1.8rem) / 2.8)
+      calc((100cqi - 1.8rem) / 2.35)
+      calc((100cqi - 1.8rem) / 2.35)
+      calc((100cqi - 1.8rem) / 2.8);
     gap: 0.9rem;
   }
 
+  /* Ten photos: L P P / L P / L P / L P P. */
   .gallery-cell {
-    grid-column: span 4;
-  }
-
-  .gallery-portrait {
-    grid-row: span 3;
+    grid-column: span 3;
+    grid-row: span 1;
+    min-width: 0;
+    min-height: 0;
   }
 
   .gallery-landscape {
     grid-column: span 6;
-    grid-row: span 2;
   }
 
-  .gallery-cell:nth-child(1) { grid-column: span 4; grid-row: span 3; }
-  .gallery-cell:nth-child(2) { grid-column: span 8; grid-row: span 2; }
-  .gallery-cell:nth-child(3) { grid-column: span 4; grid-row: span 3; }
-  .gallery-cell:nth-child(4) { grid-column: span 4; grid-row: span 3; }
-  .gallery-cell:nth-child(5) { grid-column: span 6; grid-row: span 2; }
-  .gallery-cell:nth-child(6) { grid-column: span 6; grid-row: span 2; }
-  .gallery-cell:nth-child(7) { grid-column: span 4; grid-row: span 3; }
-  .gallery-cell:nth-child(8) { grid-column: span 4; grid-row: span 3; }
-  .gallery-cell:nth-child(9) { grid-column: span 8; grid-row: span 2; }
-  .gallery-cell:nth-child(10) { grid-column: span 4; grid-row: span 3; }
-  .gallery-cell:nth-child(11) { grid-column: span 4; grid-row: span 3; }
-  .gallery-cell:nth-child(12) { grid-column: span 6; grid-row: span 2; }
-  .gallery-cell:nth-child(13) { grid-column: span 6; grid-row: span 3; }
+  .gallery-cell:nth-child(4),
+  .gallery-cell:nth-child(6) {
+    grid-column: span 8;
+  }
+
+  .gallery-cell:nth-child(5),
+  .gallery-cell:nth-child(7) {
+    grid-column: span 4;
+  }
+}
+
+.card-reel {
+  position: relative;
+}
+
+.card-reel-sticky {
+  position: sticky;
+  top: 4vh;
+  z-index: 1;
+  display: flex;
+  min-height: 92vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pile {
+  position: relative;
+  width: min(68vw, 320px);
+  aspect-ratio: 2 / 3;
+  margin-inline: auto;
+}
+
+.pile-card {
+  position: absolute;
+  inset: 0;
+}
+
+.pile-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .gallery-trigger {

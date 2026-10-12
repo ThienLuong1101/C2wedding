@@ -1,19 +1,30 @@
 import { useEffect, useState } from "react";
 import Reveal from "@/components/Reveal";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { gallery } from "@/lib/photos";
+import { gallery, type GalleryItem } from "@/lib/photos";
+
+type Viewer = { items: GalleryItem[]; index: number };
 
 export default function Gallery() {
   const { t } = useLanguage();
-  const [active, setActive] = useState<number | null>(null);
+  const [viewer, setViewer] = useState<Viewer | null>(null);
 
   useEffect(() => {
-    if (active == null) return;
+    if (viewer == null) return;
+    const count = viewer.items.length;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActive(null);
-      if (e.key === "ArrowRight") setActive((i) => (i == null ? i : (i + 1) % gallery.length));
+      if (e.key === "Escape") setViewer(null);
+      if (e.key === "ArrowRight") {
+        setViewer((current) =>
+          current == null ? current : { ...current, index: (current.index + 1) % count },
+        );
+      }
       if (e.key === "ArrowLeft") {
-        setActive((i) => (i == null ? i : (i - 1 + gallery.length) % gallery.length));
+        setViewer((current) =>
+          current == null
+            ? current
+            : { ...current, index: (current.index - 1 + count) % count },
+        );
       }
     };
     const prev = document.body.style.overflow;
@@ -23,7 +34,7 @@ export default function Gallery() {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
     };
-  }, [active]);
+  }, [viewer]);
 
   return (
     <section className="section-pad relative mx-auto max-w-6xl text-center">
@@ -38,44 +49,42 @@ export default function Gallery() {
         </p>
       </Reveal>
 
-      <div className="gallery-mosaic mt-10">
-        {gallery.map((item, i) => (
-          <Reveal
-            key={item.src}
-            delay={(i % 4) as 0 | 1 | 2 | 3}
-            className={`gallery-cell gallery-${item.orient}`}
-          >
-            <button
-              type="button"
-              className="gallery-trigger group"
-              onClick={() => setActive(i)}
-              aria-label={`${t.gallery.open} ${i + 1}`}
-            >
-              <img
-                src={item.src}
-                alt={`${t.gallery.photoAlt} ${i + 1}`}
-                loading="lazy"
-                decoding="async"
-                className="gallery-img"
-              />
-            </button>
-          </Reveal>
-        ))}
+      <div className="gallery-frame mt-10">
+        <div className="gallery-mosaic">
+          {gallery.map((item, i) => (
+            <div key={item.src} className={`gallery-cell gallery-${item.orient}`}>
+              <button
+                type="button"
+                className="gallery-trigger group"
+                onClick={() => setViewer({ items: gallery, index: i })}
+                aria-label={`${t.gallery.open} ${i + 1}`}
+              >
+                <img
+                  src={item.src}
+                  alt={`${t.gallery.photoAlt} ${i + 1}`}
+                  loading="lazy"
+                  decoding="async"
+                  className="gallery-img"
+                />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {active != null && (
+      {viewer != null && (
         <div
           className="gallery-lightbox"
           role="dialog"
           aria-modal="true"
           aria-label={t.gallery.title}
-          onClick={() => setActive(null)}
+          onClick={() => setViewer(null)}
         >
           <button
             type="button"
             className="gallery-lightbox-close label-caps"
             aria-label={t.gallery.close}
-            onClick={() => setActive(null)}
+            onClick={() => setViewer(null)}
           >
             {t.gallery.close}
           </button>
@@ -85,14 +94,21 @@ export default function Gallery() {
             aria-label={t.gallery.prev}
             onClick={(e) => {
               e.stopPropagation();
-              setActive((i) => (i == null ? i : (i - 1 + gallery.length) % gallery.length));
+              setViewer((current) =>
+                current == null
+                  ? current
+                  : {
+                      ...current,
+                      index: (current.index - 1 + current.items.length) % current.items.length,
+                    },
+              );
             }}
           >
             ‹
           </button>
           <img
-            src={gallery[active].src}
-            alt={`${t.gallery.photoAlt} ${active + 1}`}
+            src={viewer.items[viewer.index].src}
+            alt={`${t.gallery.photoAlt} ${viewer.index + 1}`}
             className="gallery-lightbox-img"
             onClick={(e) => e.stopPropagation()}
           />
@@ -102,13 +118,17 @@ export default function Gallery() {
             aria-label={t.gallery.next}
             onClick={(e) => {
               e.stopPropagation();
-              setActive((i) => (i == null ? i : (i + 1) % gallery.length));
+              setViewer((current) =>
+                current == null
+                  ? current
+                  : { ...current, index: (current.index + 1) % current.items.length },
+              );
             }}
           >
             ›
           </button>
           <p className="gallery-lightbox-count label-caps">
-            {active + 1} / {gallery.length}
+            {viewer.index + 1} / {viewer.items.length}
           </p>
         </div>
       )}

@@ -23,6 +23,8 @@ const SECTION_COLORS = [
 export default function Home() {
   const [bg, setBg] = useState(SECTION_COLORS[0]);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const reelColor = useRef<string | null>(null);
+  const updateBg = useRef(() => {});
 
   useEffect(() => {
     document.body.classList.add("is-loaded");
@@ -40,8 +42,10 @@ export default function Home() {
           active = i;
         }
       });
-      setBg(SECTION_COLORS[active]);
+      const next = active === 6 && reelColor.current ? reelColor.current : SECTION_COLORS[active];
+      setBg((current) => (current === next ? current : next));
     };
+    updateBg.current = update;
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(update);
@@ -67,7 +71,13 @@ export default function Home() {
     <Details key="details" />,
     <Gallery key="gallery" />,
     <Rsvp key="rsvp" />,
-    <Footer key="footer" />,
+    <Footer
+      key="footer"
+      onBackdrop={(color) => {
+        reelColor.current = color;
+        updateBg.current();
+      }}
+    />,
   ];
 
   return (
