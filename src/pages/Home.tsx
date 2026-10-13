@@ -8,6 +8,7 @@ import Rsvp from "@/sections/Rsvp";
 import Footer from "@/sections/Footer";
 import MusicPlayer from "@/components/MusicPlayer";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import RsvpBanner from "@/components/RsvpBanner";
 import "../App.css";
 
 const SECTION_COLORS = [
@@ -22,6 +23,12 @@ const SECTION_COLORS = [
 
 export default function Home() {
   const [bg, setBg] = useState(SECTION_COLORS[0]);
+  const [pastHero, setPastHero] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("is-past-hero", pastHero);
+    return () => document.documentElement.classList.remove("is-past-hero");
+  }, [pastHero]);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const reelColor = useRef<string | null>(null);
   const updateBg = useRef(() => {});
@@ -44,6 +51,9 @@ export default function Home() {
       });
       const next = active === 6 && reelColor.current ? reelColor.current : SECTION_COLORS[active];
       setBg((current) => (current === next ? current : next));
+      const hero = sections[0];
+      const passed = hero ? hero.getBoundingClientRect().bottom < 72 : false;
+      setPastHero((current) => (current === passed ? current : passed));
     };
     updateBg.current = update;
     const onScroll = () => {
@@ -90,6 +100,7 @@ export default function Home() {
           {section}
         </div>
       ))}
+      <RsvpBanner visible={pastHero} />
       <LanguageSwitcher />
       <MusicPlayer />
     </main>

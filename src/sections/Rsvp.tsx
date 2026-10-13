@@ -32,7 +32,7 @@ export default function Rsvp() {
   };
 
   return (
-    <section className="section-pad relative overflow-hidden">
+    <section id="rsvp" className="section-pad relative overflow-hidden">
       <img
         src={floralCorner2}
         alt=""

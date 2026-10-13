@@ -8,7 +8,7 @@ export default function LanguageSwitcher() {
     <div
       role="group"
       aria-label={t.language.label}
-      className="fixed top-5 right-5 z-50 flex items-center gap-0.5 rounded-full border border-[var(--rose)]/40 bg-[var(--ivory)]/85 p-1 shadow-[0_4px_18px_rgba(169,107,130,0.18)] backdrop-blur-sm sm:top-6 sm:right-6"
+      className="lang-switcher fixed top-5 right-5 z-50 flex items-center gap-0.5 rounded-full border border-[var(--rose)]/40 bg-[var(--ivory)]/85 p-1 shadow-[0_4px_18px_rgba(169,107,130,0.18)] backdrop-blur-sm sm:top-6 sm:right-6"
     >
       {LANGS.map((item) => {
         const active = lang === item.id;
